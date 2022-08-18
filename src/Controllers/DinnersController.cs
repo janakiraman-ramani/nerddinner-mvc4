@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
@@ -21,7 +21,7 @@ namespace NerdDinner.Controllers
         {
             int pageIndex = page ?? 1;
 
-            var dinners = db.Dinners.Where(d => d.EventDate >= DateTime.Now).OrderBy(d => d.EventDate);
+            var dinners = db.Dinners.Where(d => d.EventDate >= DateTime.Utc.Now).OrderBy(d => d.EventDate);
             return View(dinners.ToPagedList(pageIndex, PageSize));
         }
 
@@ -46,7 +46,7 @@ namespace NerdDinner.Controllers
         {
             var dinner = new Dinner()
             {
-                EventDate = DateTime.Now.AddDays(7),
+                EventDate = DateTime.Utc.Now.AddDays(7),
                 HostedBy = User.Identity.Name
             };
 
@@ -161,7 +161,7 @@ namespace NerdDinner.Controllers
         {
             ViewData["Title"] = "Popular Nerd Dinners";
             var model = from dinner in db.Dinners
-                        where dinner.EventDate >= DateTime.Now
+                        where dinner.EventDate >= DateTime.Utc.Now
                         orderby dinner.RSVPs.Count descending
                         select dinner;
             return View("WebSlice", model.Take(5));
@@ -170,7 +170,7 @@ namespace NerdDinner.Controllers
         public ActionResult WebSliceUpcoming()
         {
             ViewData["Title"] = "Upcoming Nerd Dinners";
-            DateTime d = DateTime.Now.AddMonths(2);
+            DateTime d = DateTime.Utc.Now.AddMonths(2);
             var model = from dinner in db.Dinners
                         where dinner.EventDate < d
                         orderby dinner.EventDate descending

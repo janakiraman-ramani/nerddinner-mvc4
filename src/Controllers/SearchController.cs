@@ -1,4 +1,4 @@
-﻿using NerdDinner.Models;
+using NerdDinner.Models;
 using NerdDinner.Services;
 using System;
 using System.Collections.Generic;
@@ -54,7 +54,7 @@ namespace NerdDinner.Controllers
         public IEnumerable<JsonDinner> GetMostPopularDinners(int limit)
         {
             var mostPopularDinners = from dinner in db.Dinners.Include("RSVPs")
-                                     where dinner.EventDate >= DateTime.Now
+                                     where dinner.EventDate >= DateTime.Utc.Now
                                      orderby dinner.RSVPs.Count descending
                                      select dinner;
 
